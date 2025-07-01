@@ -1,95 +1,102 @@
 import requests
 import pandas as pd
 import time
+import json
 import os
 
-# ========= Configuration ==========
+# ========== CONFIG ==========
 LLM_ENDPOINT = "http://localhost:11434/api/chat"
 LLM_MODEL_NAME = "llama3:70b"
-MAX_FRAMES = 7
-SLEEP_SECONDS = 1
-TEMP_OUTPUT_PATH = 'annotated_temp_output.csv'
+TEMP_OUTPUT_PATH = "annotated_temp_output.csv"
+FINAL_OUTPUT_PATH = "news_sample_annotated.csv"
+SLEEP_BETWEEN_REQUESTS = 1
 
-# ========= Prompt Builder ==========
-def build_multi_frame_prompt(article_text: str) -> str:
-    return f"""You are an annotation assistant helping a human coder identify which **corruption narrative frames** are present in a news article.
+# ========== FRAMES & PROMPTS ==========
+FRAME_ORDER = [
+    "Foreign influence threat",
+    "Systemic institutional corruption",
+    "Elite collusion",
+    "Politicized investigations",
+    "Authoritarian reformism",
+    "Judicial and institutional accountability failures",
+    "Mobilizing anti-corruption"
+]
 
-### Task Definition
+FRAME_PROMPT = """
+You are an annotation assistant helping a human coder identify which corruption narrative frames are present in a news article. An article may contain multiple frames or none.
 
-Your job is to read the article and identify **all applicable narrative frames** that describe how corruption is being framed.
+### Frame Definitions:
 
-### Frame Categories
+1. **Foreign influence threat**: Identify any sentences or phrases that frame political corruption as an external attack by foreign actors. Look for references to external meddling, covert financing from abroad, secret deals with foreign entities, propaganda or undue influence by external powers.
 
-1. "Foreign influence threat" – Corruption is depicted as driven by foreign powers interfering in domestic politics through propaganda, covert funding, or manipulation.
-2. "Systemic institutional corruption" – Corruption is described as a deep-rooted, structural problem across political institutions with historical or cultural causes.
-3. "Elite collusion" – Focuses on collusive deals between politicians and elites (e.g. business leaders) involving cronyism or insider advantage.
-4. "Politicized investigations" – Investigations into corruption are presented as biased, partisan, or politically motivated.
-5. "Authoritarian overreach" – Corruption is part of a broader pattern of power consolidation, repression, and dismantling democratic safeguards.
-6. "Judicial loopholes enabling corruption" – Legal or institutional loopholes protect corrupt actors or make accountability difficult.
-7. "Public outrage and call for reform" – The article highlights mass protests, civil mobilization, or reform efforts sparked by corruption.
+2. **Systemic institutional corruption**: Find any passages that describe corruption as a deep‐rooted, system‐wide problem—built into institutions, laws, or culture—and not just one‐off wrongdoing. Look for terms like “endemic,” “deep-rooted,” “fragile institutions,” or metaphors like “weed” or “cancer.”
+
+3. **Elite collusion**: Mark any passages that describe secretive alliances among powerful elites (e.g., businessmen and politicians)—such as backroom deals, undisclosed financing, or informal networks rigging policy in favor of those already in power.
+
+4. **Politicized investigations**: Identify any passages that either:
+   1. Depict corruption investigations as partisan tools or “witch hunts” (look for claims of bias, factional motives, selective enforcement),  
+   OR  
+   2. Show accused politicians publicly denying the allegations—portraying themselves as fair, law‐abiding citizens and claiming the probe is politically motivated.
+
+5. **Authoritarian reformism**: Identify any passages that either:
+   1. Describe reforms or institutional changes used to consolidate power, weaken democratic checks and balances, or target political opponents,  
+   OR  
+   2. Show politicians accusing other politicians or institutions of corruption as a campaign strategy or to gain electoral advantage.
+
+6. **Judicial and institutional accountability failures**: Identify any passages that either:
+   1. Describe how legal frameworks are manipulated (e.g., ambiguous laws, loopholes, selective enforcement) in ways that let corruption persist,  
+   OR  
+   2. Criticize anti-corruption laws, promised reforms, or public pledges as failures—empty rhetoric, broken promises, or poorly implemented measures.
+
+7. **Mobilizing anti-corruption**: Identify any passages that either:
+   1. Describe grassroots protests or elite demands calling for action against corruption (e.g., demonstrations, petitions, political speeches urging reform),  
+   OR  
+   2. Describe real institutional responses to corruption (e.g., new anti-corruption laws, court cases against officials, restructuring of oversight bodies).
 
 ---
 
-### Output Format (IMPORTANT)
+### Output Format:
 
-Return ONLY a JSON list like the following:
+Return ONLY a JSON list like this:
 
 [
   {{
     "frame": "Frame Name",
-    "highlights": ["Quote 1", "Quote 2"],
-    "rationale": "Short explanation",
-    "confidence": 87
+    "highlights": ["Exact sentence", "..."],
+    "rationale": "Short explanation of why the frame applies",
+    "confidence": 85
   }},
   ...
 ]
 
-- Use only the frame names from the list above.
-- Do NOT invent or paraphrase frame titles.
-- Only include frames with clear evidence.
-
----
-
-Article:
-{article_text}
+Only include frames that are clearly evidenced.
 """
 
-# ========= LLM JSON Call ==========
-def classify_multiple_frames(article_text: str) -> list:
-    prompt = build_multi_frame_prompt(article_text)
+# ========== LLM REQUEST ==========
+def build_prompt(article_text: str) -> str:
+    return f"{FRAME_PROMPT}\n\n---\n\nArticle:\n{article_text}"
 
+def query_llm(article_text: str) -> list:
     try:
         response = requests.post(
             LLM_ENDPOINT,
             json={
                 "model": LLM_MODEL_NAME,
-                "messages": [{"role": "user", "content": prompt}],
+                "messages": [{"role": "user", "content": build_prompt(article_text)}],
                 "stream": False
             },
             timeout=120
         )
         response.raise_for_status()
         result = response.json()
-
-        if "message" not in result or result["message"] is None:
-            raise ValueError(f"LLM response missing 'message' field. Full response: {result}")
-
-        content = result["message"].get("content", "").strip()
-        if not content:
-            raise ValueError("Empty LLM output.")
-
-        # Evaluate response safely
+        content = result.get("message", {}).get("content", "").strip()
         json_start = content.find("[")
         json_end = content.rfind("]") + 1
         json_str = content[json_start:json_end]
-
-        import json
-        frames = json.loads(json_str)
-
-        return frames
+        return json.loads(json_str)
 
     except Exception as e:
-        print(f"❌ LLM classification error: {e}")
+        print(f"❌ Error querying LLM: {e}")
         return [{
             "frame": "Error",
             "rationale": str(e),
@@ -97,87 +104,63 @@ def classify_multiple_frames(article_text: str) -> list:
             "highlights": []
         }]
 
-# ========= Output Formatter ==========
-def format_llm_frames_fixed_order(llm_frames: list) -> dict:
+# ========== RESULT FORMAT ==========
+def format_llm_output(llm_frames: list) -> dict:
     formatted = {}
-
-    fixed_order = [
-        "Foreign influence threat",
-        "Systemic institutional corruption",
-        "Elite collusion",
-        "Politicized investigations",
-        "Authoritarian overreach",
-        "Judicial loopholes enabling corruption",
-        "Public outrage and call for reform",
-    ]
-
-    def normalize(name: str) -> str:
-        return name.lower().strip()
-
-    # Build map from normalized name
     frame_map = {
-        normalize(f["frame"]): f for f in llm_frames if f.get("frame") and f["frame"].lower() != "error"
+        frame["frame"].strip().lower(): frame
+        for frame in llm_frames if frame.get("frame", "").lower() != "error"
     }
 
-    for i, frame_name in enumerate(fixed_order, 1):
-        key = normalize(frame_name)
-        matched_frame = frame_map.get(key)
-
-        if not matched_frame:
-            print(f"⚠️ Frame '{frame_name}' not found in LLM output.")
-        
-        fields = {
-            "name": matched_frame.get("frame", "") if matched_frame else "",
-            "rationale": matched_frame.get("rationale", "") if matched_frame else "",
-            "confidence": matched_frame.get("confidence", "") if matched_frame else "",
-            "evidence": "\n".join(matched_frame.get("highlights", [])) if matched_frame else ""
-        }
-
-        for suffix, val in fields.items():
-            formatted[f"frame_{i}_{suffix}"] = val
+    for i, frame_name in enumerate(FRAME_ORDER, 1):
+        key = frame_name.lower()
+        match = frame_map.get(key, {})
+        formatted[f"frame_{i}_name"] = match.get("frame", "")
+        formatted[f"frame_{i}_rationale"] = match.get("rationale", "")
+        formatted[f"frame_{i}_confidence"] = match.get("confidence", "")
+        formatted[f"frame_{i}_evidence"] = "\n".join(match.get("highlights", []))
 
     return formatted
 
-# ========= Load Data ==========
-df = pd.read_csv('~/webdav/ASCOR-FMG-5580-RESPOND-news-data (Projectfolder)/output/news_sample_translated_2000_with_llm_annotations.csv')
-# First 10 articles where llm_label == 'Yes'
-df = df[df['llm_label'] == 'Yes'].head(50).reset_index(drop=True)
+# ========== ANNOTATION LOOP ==========
+def annotate_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    for i in range(1, len(FRAME_ORDER) + 1):
+        for field in ["name", "rationale", "confidence", "evidence"]:
+            col = f"frame_{i}_{field}"
+            if col not in df.columns:
+                df[col] = ""
 
-# Ensure frame columns exist
-for i in range(1, 8):
-    for suffix in ['name', 'rationale', 'confidence', 'evidence']:
-        col = f'frame_{i}_{suffix}'
-        if col not in df.columns:
-            df[col] = ""
-        df[col] = df[col].astype("object")
+    for idx, row in df.iterrows():
+        if pd.notna(row.get("frame_1_name")) and row.get("frame_1_name") != "":
+            print(f"⏭️ Article {idx} already annotated. Skipping.")
+            continue
 
-# ========= Annotate Articles ==========
-for idx, article_text in df['translated_text'].items():
-    if pd.notna(df.at[idx, 'frame_1_name']) and df.at[idx, 'frame_1_name'] != "":
-        print(f"⏩ Skipping already annotated article at index {idx}.")
-        continue
-
-    print(f"\n🔍 Processing article at index {idx}...\n")
-
-    try:
-        frames = classify_multiple_frames(article_text)
-        formatted = format_llm_frames_fixed_order(frames)
+        print(f"\n🔍 Annotating article {idx}...\n")
+        article_text = row.get("translated_text", "")
+        frames = query_llm(article_text)
+        formatted = format_llm_output(frames)
 
         for col, val in formatted.items():
             df.at[idx, col] = val
 
-        print(f"✅ Frames for article {idx} saved.\n")
-
-        # Tussentijdse opslag
         df.to_csv(TEMP_OUTPUT_PATH, index=False)
-        print(f"💾 Tussentijds opgeslagen in: {TEMP_OUTPUT_PATH}")
+        print(f"✅ Saved progress after article {idx}.")
+        time.sleep(SLEEP_BETWEEN_REQUESTS)
 
-        time.sleep(SLEEP_SECONDS)
+    return df
 
-    except Exception as e:
-        print(f"❌ Error at index {idx}: {e}")
+# ========== MAIN ==========
+if __name__ == "__main__":
+    INPUT_PATH = "~/webdav/ASCOR-FMG-5580-RESPOND-news-data (Projectfolder)/output/news_sample_translated_10000_with_llm_annotations.csv"
+    df = pd.read_csv(INPUT_PATH)
 
-# ========= Save Final Output ==========
-output_path = '~/webdav/ASCOR-FMG-5580-RESPOND-news-data (Projectfolder)/output/news_sample_with_7_frames.csv'
-df.to_csv(output_path, index=False)
-print(f"\n✅ Final DataFrame saved to: {output_path}")
+    # Optional filtering
+    df = df[df.get("llm_label", "") == "Yes"].sample(n=10, random_state=42).reset_index(drop=True)
+
+    df = annotate_dataframe(df)
+
+    # ========= Save updated DataFrame ==========
+    output_path = os.path.expanduser('~/webdav/ASCOR-FMG-5580-RESPOND-news-data (Projectfolder)/output/news_sample_with_7_frames.csv')
+    df.to_csv(output_path, index=False)
+    print(f"\n✅ Saved annotated dataframe with up to 7 frames per article to: {output_path}")
+
