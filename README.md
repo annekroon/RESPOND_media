@@ -55,3 +55,27 @@ Note:
 
 The code in this repository is licensed under the [MIT License](LICENSE).  
 All rights to third-party data (e.g., news articles) remain with the original copyright holders.
+
+## Repository Guide
+
+This repository analyzes public discourse about political corruption. The code collects news articles, translates them into English, classifies whether they focus on political corruption, and detects specific framing narratives.
+
+### Key Components
+- `config.py` defines paths to news data, selected countries, language codes, and annotation parameters.
+- `dataloader.py` loads article CSV files, filters them by outlet, and creates balanced samples.
+- `translation.py` splits long articles into chunks, translates them via a local LLM, and assembles the results.
+- `03_run_translation.py` demonstrates how to translate a sample dataset.
+- `utils/classifier.py` prompts the LLM to decide if an article is about political corruption and parse its answer.
+- `05_run_classifier_political_corruption.py` applies that classifier to translated articles.
+- `get_7_frames.py` queries the LLM for seven predefined corruption frames.
+- `utils/highlighting.py` provides helper functions for adding `<highlight>` tags.
+- Jupyter notebooks (e.g., `04_political_corruption_classification_pipeline.ipynb`) document the workflow.
+- `frame-analysis/selected_outlets/` lists the news outlets used for framing analysis.
+
+### Typical Workflow
+1. **Prepare Data** – Collect articles and load them with `dataloader.py`.
+2. **Translate** – Run `03_run_translation.py` to translate the sample.
+3. **Classify** – Use `05_run_classifier_political_corruption.py` to annotate corruption-related content.
+4. **Frame Analysis** – Execute `get_7_frames.py` to label articles with specific corruption frames.
+5. **Explore Further** – Review the notebooks for examples of data collection, prompting, and reliability analysis.
+
