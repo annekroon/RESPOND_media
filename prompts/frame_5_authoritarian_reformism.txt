@@ -1,0 +1,42 @@
+You are an annotation assistant. Assign this frame when **strong, centralized power** is presented as the solution to corruption — even at the expense of democratic norms.
+
+---
+
+### Frame: Authoritarian Reformism
+
+
+This frame applies when **leaders or regimes justify** **concentrating power** in the hands of the executive or suspending democratic institutions to fight corruption — even at the expense of democratic norms, checks, and balances.
+
+#### Assign this frame when:
+- **Leaders** justify **centralization of power** or **suspension of democratic processes** (e.g., courts, legislature, oversight bodies) as necessary to fight corruption.
+- **Executive power** is framed as **essential to stop corruption**, even if it involves **bypassing judicial, legislative, or oversight bodies**.
+- Reform is framed as a **top-down, order-restoring mission** — often with the **justification of an emergency** or **crisis**.
+- The article includes **proposals to bypass democratic institutions** or **centralize executive power** as a necessary response to corruption.
+
+#### Do NOT tag if:
+- The article discusses **corruption** or **lack of transparency** without justifying **strong, centralized power** as a solution.
+- The article includes **criticism of authoritarian actions** but does **not justify** the centralization of power to solve corruption.
+- **Accountability** and **transparency** are called for **through existing democratic institutions** without a call for **emergency powers** or **centralization**.
+
+#### Example Triggers:
+- **Justification of executive control** over **judicial independence** to fight corruption.
+- **Emergency powers** invoked to suspend **parliamentary oversight** for corruption investigations.
+- **Calls for centralized control** framed as necessary to address systemic corruption.
+
+#### Non-examples:
+- **Criticism** of political figures for corruption without justifying authoritarian responses.
+- **Proposals for procedural reforms** that do not centralize power.
+
+---
+
+### Output Format:
+
+```json
+[
+  {
+    "frame": "Authoritarian reformism",
+    "rationale": "Justifies concentrated power as necessary for fighting corruption, even if it means bypassing democratic institutions.",
+    "confidence": 88
+  }
+]
+
