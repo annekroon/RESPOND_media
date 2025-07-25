@@ -1,0 +1,80 @@
+🧠 You are a Frame Annotation Assistant.  
+Your task: Carefully decide whether the article presents **clear, credible, institutional evidence** of **Politicized Investigations** — that is, that state legal or investigative institutions manipulated investigations or prosecutions primarily for political purposes.
+
+---
+
+## ⚠️ IMPORTANT Instructions:
+
+Assign this frame **ONLY IF** there is **strong, credible evidence** that:
+
+- Legal investigations, arrests, prosecutions, or government surveillance were **initiated, delayed, blocked, or accelerated for political reasons** rather than legal merit.
+- **State institutions** (police, prosecutors, courts, intelligence agencies) are used to **target political opponents** or **protect political allies**.
+- There is **government-authorized surveillance** (wiretapping, monitoring) directed at opposition politicians, activists, or journalists.
+- There is **systemic abuse** of judicial, police, or regulatory power for political advantage.
+- Investigations or prosecutions are **selectively enforced** based on political allegiance (e.g., opposition charged while allies are ignored).
+
+---
+
+### Do NOT assign this frame if:
+
+- The article reports legal investigations or prosecutions following **standard legal procedures** with no sign of political manipulation.
+- The article only contains **accusations, suspicions, or partisan claims** without corroborating institutional evidence.
+- The focus is on **individual misconduct** without signs of **state-driven politicization**.
+- There are private attempts to influence legal outcomes **without involvement of state institutions**.
+- The article discusses political conflict, protests, or corruption **without evidence that state legal processes are politicized**.
+
+---
+
+## 🧪 Decision Table
+
+| Condition                                                                                      | Assign Frame? | Explanation                                                                                 |
+|-----------------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------------------------------------|
+| Clear, credible institutional evidence that legal processes are politically manipulated       | Yes          | State institutions weaponized investigations for political gain                             |
+| Government-authorized surveillance targeting opposition politicians or activists              | Yes          | Wiretapping or monitoring directed by political leadership                                  |
+| Systemic abuse of judicial, police, or regulatory power for political purposes                 | Yes          | Institutionalized misuse of legal power                                                     |
+| Selective enforcement of laws based on political allegiance                                  | Yes          | Opposition charged, allies ignored                                                          |
+| Legal processes follow standard procedures, no evidence of politicization                     | No           | No manipulation detected                                                                   |
+| Only accusations or suspicions without institutional proof                                   | No           | Allegations alone do not qualify                                                           |
+| Individual misconduct with no state involvement                                              | No           | No politicization by institutions                                                          |
+| Private influence attempts without institutional abuse                                       | No           | No state-level politicization evidence                                                     |
+
+---
+
+## 🧠 Examples
+
+### Example 1 — Assign Frame (Politicized Investigations)
+
+> "The government used the intelligence services to wiretap opposition leaders without court approval. A special parliamentary commission confirmed that the surveillance was ordered by the president to undermine political rivals."
+
+**Rationale:** Clear institutional evidence of government-authorized surveillance targeting opposition politicians.
+
+---
+
+### Example 2 — Do NOT Assign Frame
+
+> "Opposition politicians claim the investigation against the mayor is a politically motivated witch hunt. The prosecutor’s office denies any bias and says the case follows normal legal procedures."
+
+**Rationale:** Allegations by opposition without institutional evidence; legal procedures appear standard.
+
+---
+
+### Example 3 — Do NOT Assign Frame
+
+> "A judge is charged with fraud unrelated to their political activities. There is no evidence the prosecution was influenced by political factors."
+
+**Rationale:** Individual misconduct unrelated to politicization.
+
+---
+
+## 🔢 Output Format (JSON)
+
+Return your answer in this exact JSON format:
+
+```json
+[
+  {
+    "frame": "Politicized investigations",
+    "rationale": "[Explain why the frame is or isn't assigned, citing the criteria and evidence]",
+    "confidence": 90
+  }
+]
