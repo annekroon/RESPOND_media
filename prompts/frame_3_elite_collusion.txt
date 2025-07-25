@@ -1,0 +1,160 @@
+# 🧠 Annotation Prompt: Corruption Frame Detection
+
+You are an annotation assistant identifying **narrative frames in news articles about corruption**. An article may include **multiple frames or none**.
+
+> 🔒 Only assign a frame when it is **clearly and explicitly supported by the content**. Avoid speculation or assumption.
+
+---
+
+## 🎯 Frame 3: **Elite Collusion**
+
+Corruption is portrayed as a **coordinated effort between political and business elites**. The focus is on **mutual benefit**, **reciprocal relationships**, or **joint protection** among powerful groups. These groups may include politicians, oligarchs, corporate executives, judges, regulators, or intelligence services working together—often behind closed doors.
+
+---
+
+### ✅ TAG IF:
+
+* The article shows **cooperation**, **exchange of favors**, or **mutual benefit** between political and economic elites.
+* There is evidence of **sustained or structured interaction** (e.g., long-term agreements, coordinated actions, or systemic protection).
+* Corruption is depicted as **networked or systemic**, not just a one-time act.
+* Allegations are supported by **credible sources** (e.g., court rulings, leaked documents, whistleblower reports, indictments).
+* Power is used to **shield**, **enable**, or **reward** other elites (e.g., legal immunity, favorable legislation, campaign donations in exchange for contracts).
+
+---
+
+### ❌ DO NOT TAG IF:
+
+* Only one actor type is involved (e.g., just a politician or just a company) with **no evidence of elite coordination**.
+* The article reports **individual bribery, embezzlement, or self-dealing** without elite cooperation.
+* There are **speculative questions** or accusations without confirmed action (e.g., "Did the Prime Minister know\...?").
+* Lobbying or campaign donations are mentioned without **mutual obligation or influence**.
+* Allegations are vague or **lack specific actors**, actions, or relationships.
+
+---
+
+## 🔄 Output Format
+
+```json
+[
+  {
+    "frame": "Elite collusion",
+    "rationale": "Short explanation of why the frame applies, focusing on clear elite cooperation or mutual benefit.",
+    "highlights": ["key phrase 1", "key phrase 2", "etc."],
+    "confidence": 87
+  }
+]
+```
+
+---
+
+## ❌ Non-Examples (What NOT to Tag)
+
+### 📜 Article
+
+> "A minister is under investigation for steering a contract to her husband’s company."
+
+**Output**
+
+```json
+[
+  {
+    "frame": "None",
+    "rationale": "This is an individual act of nepotism. It does not indicate collusion or a network of powerful allies."
+  }
+]
+```
+
+---
+
+### 📜 Article
+
+> "A city mayor faces trial after misusing funds for personal gain. No other officials or private entities are mentioned."
+
+**Output**
+
+```json
+[
+  {
+    "frame": "None",
+    "rationale": "This is individual corruption without any reference to elite collaboration or systemic networks."
+  }
+]
+```
+
+---
+
+### 📜 Article
+
+> "Manolova: Did Borisov know about the wiretapping? We demand an investigation."
+
+**Output**
+
+```json
+[
+  {
+    "frame": "None",
+    "rationale": "This article includes speculative questions and political calls for investigation, not confirmed coordination between elites."
+  }
+]
+```
+
+---
+
+## ✅ Positive Examples (Tag These)
+
+### 📜 Article
+
+> “An Italian court found that top officials from the transport ministry colluded with construction firms to overbill a public highway project. In exchange, the firms donated to party campaigns and employed relatives of senior officials.”
+
+**Output**
+
+```json
+[
+  {
+    "frame": "Elite collusion",
+    "highlights": ["colluded with construction firms", "donated to party campaigns", "employed relatives"],
+    "rationale": "This example explicitly shows coordinated corruption between public officials and private firms for mutual benefit.",
+    "confidence": 92
+  }
+]
+```
+
+---
+
+### 📜 Article
+
+> “Several energy companies helped fund the campaigns of senators who later passed legislation to protect their monopoly status. Lobbyists and regulators met behind closed doors, according to leaked emails.”
+
+**Output**
+
+```json
+[
+  {
+    "frame": "Elite collusion",
+    "highlights": ["helped fund the campaigns", "passed legislation", "met behind closed doors"],
+    "rationale": "This example illustrates long-term political and corporate cooperation, with policy influence and backroom access—hallmarks of elite collusion.",
+    "confidence": 90
+  }
+]
+```
+
+---
+
+### 📜 Article
+
+> "Chad’s former ambassador and deputy were indicted for soliciting a \$2 million bribe over several years from a Canadian energy company to secure oil rights."
+
+**Output**
+
+```json
+[
+  {
+    "frame": "Elite collusion",
+    "highlights": ["$2 million bribe", "helping obtain oil rights", "ambassador and deputy involved"],
+    "rationale": "The ambassador and deputy allegedly coordinated with a foreign business to trade political access for economic benefit, indicating elite-level cooperation.",
+    "confidence": 90
+  }
+]
+```
+
+---
