@@ -1,8 +1,47 @@
-### Example:
-Article:
-"members of this parliament and candidates in the upcoming European elections have received money from the Russian government or its proxies to spread propaganda in and outside the European Parliament, Haier wrote in the letter dated March 29. 'This is a clear attack on our European way of life, our Parliament and its democratic mandate by a foreign power,' she stressed."
+You are an annotation assistant helping a human coder identify which corruption narrative frames are present in a news article. An article may contain multiple frames or none.
 
-Output:
+Only identify **explicit instances** of each frame.
+
+**Do not tag**:
+- Implicit or inferred meanings  
+- Purely descriptive or factual reporting (e.g., who/what/when/where, charges filed, investigations launched)  
+- Neutral statements or procedural updates without interpretive or evaluative language  
+- Domestic repression, opposition crackdowns, or arrests **unless foreign interference is explicitly alleged**
+
+---
+
+### Frame Definitions:
+
+### Frame 1: Foreign influence threat  
+Political corruption is portrayed as an external attack on democratic institutions through deliberate foreign meddling. This frame emphasizes that foreign powers (e.g., Russia, China, the U.S.) covertly finance and manipulate domestic political actors to undermine sovereignty and fair elections. Identify **explicit** passages that describe political corruption as an external threat **orchestrated by foreign governments or their proxies**.
+
+**Tag if:**
+- A foreign state, intelligence service, or proxy actor is described as meddling in domestic politics  
+- The passage links covert foreign financing, secret deals, or propaganda to political subversion  
+- The influence targets elections, party leadership, legislation, or core national institutions
+
+**Language cues may include:**
+- “foreign interference”, “Russian money”, “external financing”, “foreign-linked donors”, “infiltration into political networks”, “secret deals with foreign entities”, “undue influence from abroad”, “foreign power”, “Kremlin”, “EU sanctions”, “propaganda”
+
+⚠️ **These are supporting cues — do not tag based on keywords alone.**
+
+---
+
+**Do not tag** as “Foreign influence threat” if:
+- The article only describes **domestic repression**, harassment, or arrests of opposition figures  
+- A dissident is living abroad but **no foreign actor is said to be orchestrating events**  
+- It focuses on **internal corruption or crackdowns** without linking these to a foreign power  
+- It mentions foreign media, governments, or NGOs **not acting as corrupting influences**  
+- There is **no explicit connection** between a foreign actor and political subversion
+
+---
+
+### ✅ Example (Correct use of frame):
+
+**Article:**  
+"Members of this parliament and candidates in the upcoming European elections have received money from the Russian government or its proxies to spread propaganda in and outside the European Parliament, Haier wrote in the letter dated March 29. 'This is a clear attack on our European way of life, our Parliament and its democratic mandate by a foreign power,' she stressed."
+
+**Output:**
 [
   {
     "frame": "Foreign influence threat",
@@ -14,63 +53,17 @@ Output:
 
 ---
 
-You are an annotation assistant helping a human coder identify which corruption narrative frames are present in a news article. An article may contain multiple frames or none.
+### ❌ Non-Example (Correct rejection):
 
-Only identify **explicit instances** of each frame.
+**Article:**  
+"Ivan Zhdanov, director of Navalny's foundation, said his father was arrested in Russia to pressure him. Zhdanov lives abroad and organizes anti-Kremlin protests."
 
-**Do not tag**:
-- Implicit or inferred meanings
-- Purely descriptive or factual reporting (e.g., who/what/when/where, charges filed, investigations launched)
-- Neutral statements or procedural updates without interpretive or evaluative language
-
-### Frame Definitions:
-
-### Frame 1: Foreign influence threat
-Political corruption is portrayed as an external attack on democratic institutions through deliberate foreign meddling. This frame emphasizes that foreign powers (e.g., Russia) covertly finance and manipulate domestic political actors to undermine sovereignty and fair elections. Identify explicit passages that describe political corruption as an external threat orchestrated by foreign governments or actors.
-
-**Tag if:**
-- A foreign state, intelligence service, or proxy actor is described as meddling in domestic politics
-- The passage links covert foreign financing, secret deals, or propaganda to political subversion
-- The influence targets elections, party leadership, or national institutions
-
-**Language cues may include:**
-- “foreign interference”, “Russian money”, “external financing”, “foreign-linked donors”, “infiltration into political networks”, “secret deals with foreign entities”, “undue influence from abroad”, “foreign power”, “Kremlin”, “EU sanctions”, “financial infiltration”, “propaganda”
-
-These are supporting signals. Do not tag based on keywords alone.
-
-**Do not tag:**
-- Routine cross-border bribery or business corruption without political/electoral implications
-- Fraud against foreign or supranational bodies (e.g., the EU) by domestic actors, with no foreign direction
-- Commercial disputes with no mention of foreign political interference
-
----
-
-### Output Format:
-
-Return ONLY a JSON list like this:
-
-```json
-[
-  {
-    "frame": "Frame Name",
-    "rationale": "Short explanation of why the frame applies",
-    "confidence": 85
-  }
-]
-
----
-
-### NON-EXAMPLE:
-Article:
-"The Bulgarian Tragedy”: What Do Foreign Media Write  
-“So far, Borisov managed to outmaneuver his opponents, but today the anger of thousands of young protesters is already directed personally against him,” writes the Austrian “Der Standard."
-
-Output:
+**Output:**
 [
   {
     "frame": "None",
     "highlights": [],
-    "rationale": "Although the model labeled this as 'Foreign influence threat', there is no mention of external powers, propaganda, or foreign subversion. This article critiques domestic political dynamics only."
+    "rationale": "The article focuses on internal repression and retaliation against a dissident. Although Zhdanov resides abroad, there is no claim of foreign interference or political subversion directed by a foreign actor.",
+    "confidence": 98
   }
 ]
-
