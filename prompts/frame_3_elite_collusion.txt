@@ -43,11 +43,13 @@ Avoid invalid characters such as unescaped double quotes or backslashes inside s
 ```json
 [
   {
-    "frame": "Elite collusion",
-    "rationale": "Explain briefly why elite coordination or mutual benefit is clearly shown.",
-    "confidence": 90
+    "frame": "Elite Collusion",
+    "rationale": "Provide a detailed explanation of why this frame applies. Your explanation must reference the frame definition explicitly, explain how the evidence meets the criteria, and make clear that the framing is explicit rather than inferred.",
+    "evidence": "Quote or paraphrase the specific text from the article that directly supports the classification.",
+    "confidence": <confidence_score_from_0_to_100>
   }
 ]
+
 ```
 
 - If the article does **not match**, return:
@@ -116,11 +118,13 @@ Avoid invalid characters such as unescaped double quotes or backslashes inside s
 ```json
 [
   {
-    "frame": "Elite collusion",
-    "rationale": "This explicitly shows coordinated corruption between public officials and private firms for mutual benefit.",
+    "frame": "Elite Collusion",
+    "rationale": "This article fits the 'Elite Collusion' frame because it explicitly documents coordinated corruption between political elites (transport ministry officials) and economic elites (construction firms). The arrangement included mutual benefits — campaign donations and nepotistic hiring — in return for public overbilling. The description aligns directly with the frame’s definition of reciprocal relationships among powerful groups working behind closed doors for mutual gain.",
+    "evidence": "Top officials from the transport ministry colluded with construction firms... firms donated to party campaigns and employed relatives of senior officials.",
     "confidence": 92
   }
 ]
+
 ```
 
 ---
@@ -132,11 +136,13 @@ Avoid invalid characters such as unescaped double quotes or backslashes inside s
 ```json
 [
   {
-    "frame": "Elite collusion",
-    "rationale": "The article illustrates long-term political and corporate cooperation with policy influence — hallmarks of elite collusion.",
+    "frame": "Elite Collusion",
+    "rationale": "The article matches the 'Elite Collusion' frame because it details long-term cooperation between political and corporate elites. Energy companies provided campaign funding, while senators returned the favor with legislation that protected corporate monopolies. The mention of behind-closed-door meetings among lobbyists and regulators highlights systemic coordination and mutual protection — core traits of elite collusion.",
+    "evidence": "Energy companies helped fund the campaigns of senators... who later passed legislation to protect their monopoly status. Lobbyists and regulators met behind closed doors.",
     "confidence": 90
   }
 ]
+
 ```
 
 ---
@@ -148,11 +154,12 @@ Avoid invalid characters such as unescaped double quotes or backslashes inside s
 ```json
 [
   {
-    "frame": "Elite collusion",
-    "rationale": "The ambassador and deputy coordinated with a foreign business to trade political access for economic benefit — a clear case of elite-level cooperation.",
+    "frame": "Elite Collusion",
+    "rationale": "This case clearly reflects the 'Elite Collusion' frame. The prolonged solicitation of bribes by two senior officials from Chad in exchange for access to national oil rights demonstrates a coordinated, mutually beneficial relationship between political elites and foreign corporate interests. The involvement of high-ranking diplomats and the structured nature of the exchange point to elite-level cooperation as defined by the frame.",
+    "evidence": "Chad’s former ambassador and deputy were indicted for soliciting a $2 million bribe over several years from a Canadian energy company to secure oil rights.",
     "confidence": 90
   }
 ]
+
 ```
 
----

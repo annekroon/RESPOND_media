@@ -74,7 +74,9 @@ Return your answer in this exact JSON format:
 [
   {
     "frame": "Politicized investigations",
-    "rationale": "[Explain why the frame is or isn't assigned, citing the criteria and evidence]",
+    "rationale": "Provide a detailed explanation of why this frame applies. Your explanation must reference the frame definition explicitly, explain how the evidence meets the criteria, and make clear that the framing is explicit rather than inferred.",
+    "evidence": "Quote or paraphrase the specific text from the article that directly supports the classification.",
     "confidence": 90
   }
 ]
+```

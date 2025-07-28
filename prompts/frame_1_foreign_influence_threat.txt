@@ -42,14 +42,18 @@ Political corruption is portrayed as an external attack on democratic institutio
 "Members of this parliament and candidates in the upcoming European elections have received money from the Russian government or its proxies to spread propaganda in and outside the European Parliament, Haier wrote in the letter dated March 29. 'This is a clear attack on our European way of life, our Parliament and its democratic mandate by a foreign power,' she stressed."
 
 **Output:**
+If a frame is present, provide the following structured output:
+
+
 [
   {
     "frame": "Foreign influence threat",
-    "highlights": ["This is a clear attack on our European way of life, our Parliament and its democratic mandate by a foreign power."],
-    "rationale": "Foreign financial support for propaganda is explicitly framed as an attack on democratic institutions by a foreign power, matching the 'Foreign influence threat' frame.",
+    "rationale": "This article explicitly states that members of the European Parliament received money from the Russian government or its proxies. It further characterizes this as a 'clear attack' on democratic institutions, indicating deliberate foreign subversion. This aligns directly with the 'Foreign influence threat' frame, which involves external state actors covertly influencing domestic politics, particularly elections or legislatures. The framing is not implicit — it is explicitly described as an act by a 'foreign power' targeting democratic legitimacy.",
+    "evidence": "Members... have received money from the Russian government or its proxies to spread propaganda... 'clear attack... by a foreign power.'",
     "confidence": 92
   }
 ]
+
 
 ---
 
@@ -59,6 +63,7 @@ Political corruption is portrayed as an external attack on democratic institutio
 "Ivan Zhdanov, director of Navalny's foundation, said his father was arrested in Russia to pressure him. Zhdanov lives abroad and organizes anti-Kremlin protests."
 
 **Output:**
+
 [
   {
     "frame": "None",

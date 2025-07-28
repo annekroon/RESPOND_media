@@ -110,13 +110,13 @@ The article must show that institutions are:
 
 ## 🔢 Output Format (JSON)
 
-Return your output in this exact format:
 
-```json
+
 [
   {
-    "frame": "Systemic institutional corruption",
-    "rationale": "[Explain why all 3 conditions are clearly met — or say why they are not]",
-    "confidence": 91
+    "frame": "Systemic Institutional Corruption",
+    "rationale": "Provide a detailed explanation of why this frame applies. Your explanation must reference the frame definition explicitly, explain how the evidence meets the criteria, and make clear that the framing is explicit rather than inferred.",
+    "evidence": "Quote or paraphrase the specific text from the article that directly supports the classification.",
+    "confidence": 90
   }
 ]

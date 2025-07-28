@@ -76,15 +76,13 @@ Only assign the frame if these cues suggest **concentrated, repressive power use
 
 ---
 
-## 🔢 Output Format
+## 🔢 Output Format (JSON)
 
-Respond ONLY in this exact JSON format:
-
-```json
 [
   {
     "frame": "Authoritarian Reformism",
-    "rationale": "[Explain clearly why the frame is or isn't assigned, based on the decision criteria]",
+    "rationale": "Provide a detailed explanation of why this frame applies. Your explanation must reference the frame definition explicitly, explain how the evidence meets the criteria, and make clear that the framing is explicit rather than inferred.",
+    "evidence": "Quote or paraphrase the specific text from the article that directly supports the classification.",
     "confidence": 90
   }
 ]

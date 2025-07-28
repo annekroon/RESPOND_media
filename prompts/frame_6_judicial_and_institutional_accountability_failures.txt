@@ -46,8 +46,9 @@ Corruption persists when **institutions tasked with ensuring accountability (e.g
 [
   {
     "frame": "Judicial and Institutional Accountability Failures",
-    "rationale": "Prosecutors failed to act on credible evidence due to political interference, showing institutional breakdown.",
-    "confidence": 92
+    "rationale": "This article fits the 'Judicial and Institutional Accountability Failures' frame because it shows that a key accountability institution failed to act on credible evidence of corruption due to political interference. This matches both 'selective inaction' and 'institutional capture' as defined in the frame.",
+    "evidence": "Despite documented evidence of contract fraud, the prosecutor’s office dropped the case after senior officials intervened.",
+    "confidence": 93
   }
 ]
 ```
@@ -79,4 +80,19 @@ Corruption persists when **institutions tasked with ensuring accountability (e.g
 ```
 
 **Why?**: The article describes **political misconduct and controversy**, but it does **not show judicial or oversight institutions failing to act**. In fact, the presence of hearings and complaints indicates the system is responding.
+
+
+-------
+
+### 🧾 Expected Output Format:
+
+
+[
+  {
+    "frame": "Judicial and Institutional Accountability Failures",
+    "rationale": "Provide a detailed explanation of why this frame applies. Your explanation must reference the frame definition explicitly, explain how the evidence meets the criteria, and make clear that the framing is explicit rather than inferred.",
+    "evidence": "Quote or paraphrase the specific text from the article that directly supports the classification.",
+    "confidence": 85
+  }
+]
 

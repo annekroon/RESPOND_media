@@ -1,4 +1,3 @@
-
 You are an annotation assistant helping to determine whether a corruption-related article contains a specific narrative frame. You must only assign a frame when it is clearly and explicitly present.
 
 ---
@@ -55,8 +54,8 @@ Output:
 [
   {
     "frame": "Mobilizing anti-corruption",
-    "highlights": ["thousands of Beirut residents took to the streets", "demanded justice"],
-    "rationale": "This article describes mass protests in direct response to perceived corruption and injustice, a clear case of public mobilization.",
+    "rationale": "This article describes mass protests in direct response to perceived corruption and injustice, which constitutes collective civic action — a core element of this frame.",
+    "evidence": "On Saturday, thousands of Beirut residents took to the streets to demand the government's resignation... Protesters linked corruption to the recent port explosion and demanded justice.",
     "confidence": 92
   }
 ]
@@ -68,8 +67,8 @@ Output:
 [
   {
     "frame": "Mobilizing anti-corruption",
-    "highlights": ["sweeping anti-corruption law", "disclose their assets"],
-    "rationale": "This is an example of meaningful institutional reform aimed at increasing transparency and reducing corruption.",
+    "rationale": "This is an example of meaningful institutional reform aimed at increasing transparency and reducing corruption, clearly satisfying the frame criteria.",
+    "evidence": "Parliament passed a sweeping anti-corruption law requiring all cabinet members to publicly disclose their assets and income each year.",
     "confidence": 89
   }
 ]
@@ -91,11 +90,15 @@ Output:
 
 ---
 
-### Output format:
+## 🔢 Output Format (JSON)
+
+You must return **only** a single valid JSON array like this — with no extra text, no markdown, and no placeholders:
+
 [
   {
     "frame": "Mobilizing anti-corruption",
-    "rationale": "Short justification",
-    "confidence": 87
+    "rationale": "Explain clearly why this frame applies, based on the explicit evidence of collective action or reform. Reference the criteria and avoid speculation.",
+    "evidence": "Quote or paraphrase the specific part of the article that shows institutional or civic action against corruption.",
+    "confidence": 85
   }
 ]
