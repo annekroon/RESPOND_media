@@ -1,3 +1,6 @@
+## FIRST TRY AT CLASSIFYING FRAMES (NOT SUCCESFUL)
+
+
 import requests
 import pandas as pd
 import time
